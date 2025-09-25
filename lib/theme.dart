@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ## NEW: Updated color palette ##
 class LightModeColors {
-  // Sacred Temple Theme
-  static const lightPrimary = Color(0xFFFF9933); // Sacred Saffron
+  static const lightPrimary = Color(0xFFFF6F00); // Vibrant orange
   static const lightOnPrimary = Color(0xFFFFFFFF);
-  static const lightPrimaryContainer = Color(0xFFFFF8E1); // Temple Cream
-  static const lightOnPrimaryContainer = Color(0xFF333333); // Charcoal
-  static const lightSecondary = Color(0xFFFFC000); // Marigold Gold
-  static const lightOnSecondary = Color(0xFF333333);
-  static const lightTertiary = Color(0xFFD22B2B); // Vermilion Red
+  static const lightSecondary = Color(0xFFFFB300); // Lighter, yellowish orange
+  static const lightOnSecondary = Color(0xFFFFFFFF);
+  static const lightTertiary = Color(0xFFD22B2B); // Kept your red for accents
   static const lightOnTertiary = Color(0xFFFFFFFF);
-  static const lightError = Color(0xFFD22B2B);
+  static const lightError = Color(0xFFB00020);
   static const lightOnError = Color(0xFFFFFFFF);
-  static const lightErrorContainer = Color(0xFFFFE6E6);
-  static const lightOnErrorContainer = Color(0xFFD22B2B);
-  static const lightInversePrimary = Color(0xFFFF9933);
-  static const lightShadow = Color(0xFF000000);
-  static const lightSurface = Color(0xFFFFF8E1); // Temple Cream
-  static const lightOnSurface = Color(0xFF333333); // Charcoal
-  static const lightAppBarBackground = Color(0xFFFF9933); // Sacred Saffron
+  static const lightSurface = Color(0xFFF5F5F5); // Light grey for backgrounds
+  static const lightOnSurface = Color(0xFF212121); // Dark text
 }
 
+// Your original DarkModeColors
 class DarkModeColors {
   static const darkPrimary = Color(0xFFD4BCCF);
   static const darkOnPrimary = Color(0xFF38265C);
@@ -42,6 +36,7 @@ class DarkModeColors {
   static const darkAppBarBackground = Color(0xFF4F3D74);
 }
 
+// Your original FontSizes
 class FontSizes {
   static const double displayLarge = 57.0;
   static const double displayMedium = 45.0;
@@ -60,182 +55,121 @@ class FontSizes {
   static const double bodySmall = 12.0;
 }
 
+// ## NEW: Updated ThemeData for Light Mode ##
 ThemeData get lightTheme => ThemeData(
-  useMaterial3: true,
-  colorScheme: ColorScheme.light(
-    primary: LightModeColors.lightPrimary,
-    onPrimary: LightModeColors.lightOnPrimary,
-    primaryContainer: LightModeColors.lightPrimaryContainer,
-    onPrimaryContainer: LightModeColors.lightOnPrimaryContainer,
-    secondary: LightModeColors.lightSecondary,
-    onSecondary: LightModeColors.lightOnSecondary,
-    tertiary: LightModeColors.lightTertiary,
-    onTertiary: LightModeColors.lightOnTertiary,
-    error: LightModeColors.lightError,
-    onError: LightModeColors.lightOnError,
-    errorContainer: LightModeColors.lightErrorContainer,
-    onErrorContainer: LightModeColors.lightOnErrorContainer,
-    inversePrimary: LightModeColors.lightInversePrimary,
-    shadow: LightModeColors.lightShadow,
-    surface: LightModeColors.lightSurface,
-    onSurface: LightModeColors.lightOnSurface,
-  ),
-  brightness: Brightness.light,
-  appBarTheme: AppBarTheme(
-    backgroundColor: LightModeColors.lightAppBarBackground,
-    foregroundColor: LightModeColors.lightOnPrimaryContainer,
-    elevation: 0,
-  ),
-  textTheme: TextTheme(
-    displayLarge: GoogleFonts.inter(
-      fontSize: FontSizes.displayLarge,
-      fontWeight: FontWeight.normal,
-    ),
-    displayMedium: GoogleFonts.inter(
-      fontSize: FontSizes.displayMedium,
-      fontWeight: FontWeight.normal,
-    ),
-    displaySmall: GoogleFonts.inter(
-      fontSize: FontSizes.displaySmall,
-      fontWeight: FontWeight.w600,
-    ),
-    headlineLarge: GoogleFonts.inter(
-      fontSize: FontSizes.headlineLarge,
-      fontWeight: FontWeight.normal,
-    ),
-    headlineMedium: GoogleFonts.inter(
-      fontSize: FontSizes.headlineMedium,
-      fontWeight: FontWeight.w500,
-    ),
-    headlineSmall: GoogleFonts.inter(
-      fontSize: FontSizes.headlineSmall,
-      fontWeight: FontWeight.bold,
-    ),
-    titleLarge: GoogleFonts.inter(
-      fontSize: FontSizes.titleLarge,
-      fontWeight: FontWeight.w500,
-    ),
-    titleMedium: GoogleFonts.inter(
-      fontSize: FontSizes.titleMedium,
-      fontWeight: FontWeight.w500,
-    ),
-    titleSmall: GoogleFonts.inter(
-      fontSize: FontSizes.titleSmall,
-      fontWeight: FontWeight.w500,
-    ),
-    labelLarge: GoogleFonts.inter(
-      fontSize: FontSizes.labelLarge,
-      fontWeight: FontWeight.w500,
-    ),
-    labelMedium: GoogleFonts.inter(
-      fontSize: FontSizes.labelMedium,
-      fontWeight: FontWeight.w500,
-    ),
-    labelSmall: GoogleFonts.inter(
-      fontSize: FontSizes.labelSmall,
-      fontWeight: FontWeight.w500,
-    ),
-    bodyLarge: GoogleFonts.inter(
-      fontSize: FontSizes.bodyLarge,
-      fontWeight: FontWeight.normal,
-    ),
-    bodyMedium: GoogleFonts.inter(
-      fontSize: FontSizes.bodyMedium,
-      fontWeight: FontWeight.normal,
-    ),
-    bodySmall: GoogleFonts.inter(
-      fontSize: FontSizes.bodySmall,
-      fontWeight: FontWeight.normal,
-    ),
-  ),
-);
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: LightModeColors.lightPrimary,
+        primary: LightModeColors.lightPrimary,
+        secondary: LightModeColors.lightSecondary,
+        surface: LightModeColors.lightSurface,
+        onPrimary: LightModeColors.lightOnPrimary,
+        onSecondary: LightModeColors.lightOnSecondary,
+        onSurface: LightModeColors.lightOnSurface,
+        tertiary: LightModeColors.lightTertiary,
+        onTertiary: LightModeColors.lightOnTertiary,
+        error: LightModeColors.lightError,
+        onError: LightModeColors.lightOnError,
+        brightness: Brightness.light,
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: LightModeColors.lightPrimary,
+        foregroundColor: LightModeColors.lightOnPrimary,
+        elevation: 0,
+        centerTitle: false,
+        titleTextStyle: GoogleFonts.inter(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: LightModeColors.lightOnPrimary,
+        ),
+      ),
+      cardTheme: CardThemeData(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: LightModeColors.lightPrimary,
+          foregroundColor: LightModeColors.lightOnPrimary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          textStyle:
+              GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold),
+          elevation: 2,
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: LightModeColors.lightPrimary,
+          side: BorderSide(color: LightModeColors.lightPrimary, width: 1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          textStyle:
+              GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide:
+              BorderSide(color: LightModeColors.lightSecondary, width: 2),
+        ),
+        labelStyle: TextStyle(color: Colors.grey[600]),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      ),
+      textTheme: GoogleFonts.interTextTheme(
+        ThemeData.light().textTheme,
+      ).apply(
+        bodyColor: LightModeColors.lightOnSurface,
+        displayColor: LightModeColors.lightOnSurface,
+      ),
+    );
 
+// Your original dark theme getter
 ThemeData get darkTheme => ThemeData(
-  useMaterial3: true,
-  colorScheme: ColorScheme.dark(
-    primary: DarkModeColors.darkPrimary,
-    onPrimary: DarkModeColors.darkOnPrimary,
-    primaryContainer: DarkModeColors.darkPrimaryContainer,
-    onPrimaryContainer: DarkModeColors.darkOnPrimaryContainer,
-    secondary: DarkModeColors.darkSecondary,
-    onSecondary: DarkModeColors.darkOnSecondary,
-    tertiary: DarkModeColors.darkTertiary,
-    onTertiary: DarkModeColors.darkOnTertiary,
-    error: DarkModeColors.darkError,
-    onError: DarkModeColors.darkOnError,
-    errorContainer: DarkModeColors.darkErrorContainer,
-    onErrorContainer: DarkModeColors.darkOnErrorContainer,
-    inversePrimary: DarkModeColors.darkInversePrimary,
-    shadow: DarkModeColors.darkShadow,
-    surface: DarkModeColors.darkSurface,
-    onSurface: DarkModeColors.darkOnSurface,
-  ),
-  brightness: Brightness.dark,
-  appBarTheme: AppBarTheme(
-    backgroundColor: DarkModeColors.darkAppBarBackground,
-    foregroundColor: DarkModeColors.darkOnPrimaryContainer,
-    elevation: 0,
-  ),
-  textTheme: TextTheme(
-    displayLarge: GoogleFonts.inter(
-      fontSize: FontSizes.displayLarge,
-      fontWeight: FontWeight.normal,
-    ),
-    displayMedium: GoogleFonts.inter(
-      fontSize: FontSizes.displayMedium,
-      fontWeight: FontWeight.normal,
-    ),
-    displaySmall: GoogleFonts.inter(
-      fontSize: FontSizes.displaySmall,
-      fontWeight: FontWeight.w600,
-    ),
-    headlineLarge: GoogleFonts.inter(
-      fontSize: FontSizes.headlineLarge,
-      fontWeight: FontWeight.normal,
-    ),
-    headlineMedium: GoogleFonts.inter(
-      fontSize: FontSizes.headlineMedium,
-      fontWeight: FontWeight.w500,
-    ),
-    headlineSmall: GoogleFonts.inter(
-      fontSize: FontSizes.headlineSmall,
-      fontWeight: FontWeight.bold,
-    ),
-    titleLarge: GoogleFonts.inter(
-      fontSize: FontSizes.titleLarge,
-      fontWeight: FontWeight.w500,
-    ),
-    titleMedium: GoogleFonts.inter(
-      fontSize: FontSizes.titleMedium,
-      fontWeight: FontWeight.w500,
-    ),
-    titleSmall: GoogleFonts.inter(
-      fontSize: FontSizes.titleSmall,
-      fontWeight: FontWeight.w500,
-    ),
-    labelLarge: GoogleFonts.inter(
-      fontSize: FontSizes.labelLarge,
-      fontWeight: FontWeight.w500,
-    ),
-    labelMedium: GoogleFonts.inter(
-      fontSize: FontSizes.labelMedium,
-      fontWeight: FontWeight.w500,
-    ),
-    labelSmall: GoogleFonts.inter(
-      fontSize: FontSizes.labelSmall,
-      fontWeight: FontWeight.w500,
-    ),
-    bodyLarge: GoogleFonts.inter(
-      fontSize: FontSizes.bodyLarge,
-      fontWeight: FontWeight.normal,
-    ),
-    bodyMedium: GoogleFonts.inter(
-      fontSize: FontSizes.bodyMedium,
-      fontWeight: FontWeight.normal,
-    ),
-    bodySmall: GoogleFonts.inter(
-      fontSize: FontSizes.bodySmall,
-      fontWeight: FontWeight.normal,
-    ),
-  ),
-);
+      useMaterial3: true,
+      colorScheme: ColorScheme.dark(
+        primary: DarkModeColors.darkPrimary,
+        onPrimary: DarkModeColors.darkOnPrimary,
+        primaryContainer: DarkModeColors.darkPrimaryContainer,
+        onPrimaryContainer: DarkModeColors.darkOnPrimaryContainer,
+        secondary: DarkModeColors.darkSecondary,
+        onSecondary: DarkModeColors.darkOnSecondary,
+        tertiary: DarkModeColors.darkTertiary,
+        onTertiary: DarkModeColors.darkOnTertiary,
+        error: DarkModeColors.darkError,
+        onError: DarkModeColors.darkOnError,
+        errorContainer: DarkModeColors.darkErrorContainer,
+        onErrorContainer: DarkModeColors.darkOnErrorContainer,
+        inversePrimary: DarkModeColors.darkInversePrimary,
+        shadow: DarkModeColors.darkShadow,
+        surface: DarkModeColors.darkSurface,
+        onSurface: DarkModeColors.darkOnSurface,
+      ),
+      brightness: Brightness.dark,
+      appBarTheme: AppBarTheme(
+        backgroundColor: DarkModeColors.darkAppBarBackground,
+        foregroundColor: DarkModeColors.darkOnPrimaryContainer,
+        elevation: 0,
+      ),
+      textTheme: GoogleFonts.interTextTheme(
+        ThemeData.dark().textTheme,
+      ),
+    );

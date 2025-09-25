@@ -36,7 +36,7 @@ class DarshanBooking {
   final String templeName;
   final DateTime bookingDate;
   final String timeSlot;
-  final String pilgrimName;
+  final List<String> pilgrimNames;
   final String pilgrimPhone;
   final BookingType bookingType;
   final BookingStatus status;
@@ -48,7 +48,7 @@ class DarshanBooking {
     required this.templeName,
     required this.bookingDate,
     required this.timeSlot,
-    required this.pilgrimName,
+    required this.pilgrimNames,
     required this.pilgrimPhone,
     required this.bookingType,
     required this.status,
@@ -58,7 +58,17 @@ class DarshanBooking {
   String get qrCode => 'TEMPLE_$templeId-BOOKING_$id-${bookingDate.day}${bookingDate.month}';
 }
 
-enum BookingType { normal, vip, noBooking }
+// ## UPDATED ENUM ##
+// This is the new, enhanced enum.
+enum BookingType {
+  normal('Normal Darshan'),
+  vip('VIP Darshan'),
+  noBooking('Walk-in (No Booking)');
+
+  final String displayText;
+  const BookingType(this.displayText);
+}
+
 enum BookingStatus { confirmed, inQueue, completed, cancelled }
 
 class EmergencyAlert {

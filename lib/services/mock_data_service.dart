@@ -12,7 +12,7 @@ class MockDataService {
         maxCapacity: 2000,
         timings: ['5:00 AM - 9:30 PM'],
         isOpen: true,
-        imageUrl: 'https://pixabay.com/get/g95813bba53e54322f8db587165e49557a18c4ab9f6c8faa27f7f78d934ecd661cc2eb35bfbc63901a788bba9c8eed2a940f85995325827b107e28d9e06a49a66_1280.jpg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Somanath_Temple.jpg',
       ),
       Temple(
         id: 'dwarka',
@@ -23,7 +23,7 @@ class MockDataService {
         maxCapacity: 1500,
         timings: ['6:00 AM - 12:30 PM', '5:00 PM - 9:30 PM'],
         isOpen: true,
-        imageUrl: 'https://pixabay.com/get/g2113daa4f624bb1322cd4aacd87b4fbc298d89770380f18ebdcb81532fa6c85efe70aabd8cbf1c04e05b656ae6bda4efca1a44abca9a0407627df30642674ac5_1280.jpg',
+        imageUrl: 'https://www.shutterstock.com/image-photo/dwarka-believed-have-been-first-600nw-2446461461.jpg',
       ),
       Temple(
         id: 'ambaji',
@@ -34,7 +34,7 @@ class MockDataService {
         maxCapacity: 1200,
         timings: ['5:00 AM - 10:00 PM'],
         isOpen: true,
-        imageUrl: 'https://pixabay.com/get/g5e8750f7b3d2a889ae071d1c189e5f1233603d981a4241f9346147faa36eba35458d1b5894f093b2c5f88a4d9867aa224c77d56b1e11584168b78bd699505915_1280.jpg',
+        imageUrl: 'https://www.gujarattourism.com/content/dam/gujrattourism/images/religious-sites/ambaji-temple/Ambaji-Temple-Thumbnail.jpg',
       ),
       Temple(
         id: 'pavagadh',
@@ -45,7 +45,7 @@ class MockDataService {
         maxCapacity: 800,
         timings: ['6:00 AM - 8:00 PM'],
         isOpen: true,
-        imageUrl: 'https://pixabay.com/get/gbb08e21774f56c31a603f47eb9bc49e784b4073dbc7b569a363e50450dc8fb71862d2d37bd3cdde4bad0bfe0377f0c91f7ffdc1ac166c386072c8510fbb765a7_1280.jpg',
+        imageUrl: 'https://www.gujarattourism.com/content/dam/gujrattourism/images/pavagadh-kalika-mata-temple/pavagadhtempletopview.jpg',
       ),
     ];
   }
@@ -74,7 +74,8 @@ class MockDataService {
         templeName: 'Somnath Temple',
         bookingDate: DateTime.now().add(const Duration(days: 1)),
         timeSlot: '7:00 AM - 8:00 AM',
-        pilgrimName: 'Rajesh Patel',
+        // FIXED HERE: Changed pilgrimName to pilgrimNames and wrapped the name in a list
+        pilgrimNames: ['Rajesh Patel'],
         pilgrimPhone: '+91 9876543210',
         bookingType: BookingType.normal,
         status: BookingStatus.confirmed,
@@ -86,7 +87,8 @@ class MockDataService {
         templeName: 'Dwarkadhish Temple',
         bookingDate: DateTime.now(),
         timeSlot: '6:00 PM - 7:00 PM',
-        pilgrimName: 'Priya Sharma',
+        // FIXED HERE: Changed pilgrimName to pilgrimNames and wrapped the name in a list
+        pilgrimNames: ['Priya Sharma', 'Rohan Sharma'],
         pilgrimPhone: '+91 8765432109',
         bookingType: BookingType.vip,
         status: BookingStatus.inQueue,

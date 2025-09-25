@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:devadarshan/services/mock_data_service.dart';
 
 class EmergencyScreen extends StatefulWidget {
   const EmergencyScreen({super.key});

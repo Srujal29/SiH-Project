@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:devadarshan/services/mock_data_service.dart';
 import 'package:devadarshan/models/temple.dart';
+import 'package:devadarshan/widgets/app_card.dart'; // Import the new AppCard
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -32,13 +33,9 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Theme.of(context).colorScheme.onPrimary,
-          unselectedLabelColor: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
-          indicatorColor: Theme.of(context).colorScheme.secondary,
+          unselectedLabelColor: Theme.of(context).colorScheme.onPrimary.withAlpha(179), // ~70% opacity
           tabs: const [
             Tab(text: 'Analytics', icon: Icon(Icons.analytics)),
             Tab(text: 'Heatmap', icon: Icon(Icons.map)),
@@ -82,7 +79,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
       physics: const NeverScrollableScrollPhysics(),
       mainAxisSpacing: 16,
       crossAxisSpacing: 16,
-      childAspectRatio: 1.5,
+      childAspectRatio: 1.2, // Adjusted for better fit
       children: [
         _buildStatCard(
           'Today\'s Visitors',
@@ -100,7 +97,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
         ),
         _buildStatCard(
           'Peak Hours',
-          '${(crowdData['peakHours'] as List)[0]}',
+          (crowdData['peakHours'] as List).join('\n'), // Use newline for long text
           Icons.schedule,
           Theme.of(context).colorScheme.tertiary,
           'Morning rush',
@@ -117,68 +114,70 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
   }
 
   Widget _buildStatCard(String title, String value, IconData icon, Color color, String subtitle) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return AppCard(
+      margin: EdgeInsets.zero,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12), // Reduced padding
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)],
+            colors: [color.withAlpha(25), color.withAlpha(12)],
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround, // Better spacing
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Icon(icon, color: color, size: 24),
-                const Spacer(),
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1),
+                    color: color.withAlpha(25),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Icon(Icons.trending_up, color: color, size: 16),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
             Text(
               value,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+              // ## FIXED: Reduced font size to prevent overflow ##
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Text(
-              subtitle,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: color,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+                Text(
+                  subtitle,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: color,
+                      ),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
-
+  
   Widget _buildPredictionCard() {
     final prediction = crowdData['prediction'] as Map<String, dynamic>;
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return AppCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -191,8 +190,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                 Text(
                   'AI Crowd Prediction',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ],
             ),
@@ -201,7 +200,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                color: Theme.of(context).colorScheme.primary.withAlpha(25),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -210,9 +209,9 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                   Text(
                     'Tomorrow\'s Forecast: ${prediction['tomorrow']} visitors',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                   ),
                   const SizedBox(height: 8),
                   Text('Confidence: ${prediction['confidence']}%'),
@@ -222,9 +221,9 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 4),
-                  ...((prediction['factors'] as List).map((factor) => 
+                  ...(prediction['factors'] as List).map((factor) => 
                     Text('• $factor', style: Theme.of(context).textTheme.bodyMedium)
-                  )),
+                  ),
                 ],
               ),
             ),
@@ -241,8 +240,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
         Text(
           'Temple Status Overview',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 12),
         ListView.builder(
@@ -251,11 +250,11 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
           itemCount: temples.length,
           itemBuilder: (context, index) {
             final temple = temples[index];
-            return Card(
+            return AppCard(
               margin: const EdgeInsets.only(bottom: 8),
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: _getCrowdColor(temple.crowdPercentage).withValues(alpha: 0.2),
+                  backgroundColor: _getCrowdColor(temple.crowdPercentage).withAlpha(51),
                   child: Text(
                     '${(temple.crowdPercentage * 100).round()}%',
                     style: TextStyle(
@@ -299,9 +298,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
       'Setup overflow seating in Ambaji courtyard',
     ];
 
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return AppCard(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -314,8 +311,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                 Text(
                   'AI Staff Deployment Suggestions',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ],
             ),
@@ -352,8 +349,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
           Text(
             'Real-time Crowd Density Heatmap',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 16),
           Container(
@@ -361,17 +358,17 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+              border: Border.all(color: Colors.grey.withAlpha(76)),
             ),
             child: Column(
               children: [
                 Text(
                   'Temple Layout View',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 const SizedBox(height: 16),
                 Expanded(
@@ -432,7 +429,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             itemBuilder: (context, index) {
               final area = heatMapData[index];
               final density = area['density'] as int;
-              return Card(
+              return AppCard(
                 margin: const EdgeInsets.only(bottom: 8),
                 child: ListTile(
                   leading: Container(
@@ -469,7 +466,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
   }
 
   Widget _buildHeatmapLegend() {
-    return Card(
+    return AppCard(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -478,8 +475,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             Text(
               'Density Legend',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
             Row(
@@ -525,18 +522,18 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             child: Text(
               'Emergency Alerts & Incidents',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           );
         }
         
         final alert = emergencyAlerts[index - 1];
-        return Card(
+        return AppCard(
           margin: const EdgeInsets.only(bottom: 12),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: _getAlertColor(alert.status).withValues(alpha: 0.2),
+              backgroundColor: _getAlertColor(alert.status).withAlpha(51),
               child: Icon(
                 _getAlertIcon(alert.type),
                 color: _getAlertColor(alert.status),
@@ -558,7 +555,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             trailing: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: _getAlertColor(alert.status).withValues(alpha: 0.1),
+                color: _getAlertColor(alert.status).withAlpha(25),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
