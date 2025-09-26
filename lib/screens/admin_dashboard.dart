@@ -1,7 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:devadarshan/services/mock_data_service.dart';
+import 'package:http/http.dart' as http;
 import 'package:devadarshan/models/temple.dart';
-import 'package:devadarshan/widgets/app_card.dart'; // Import the new AppCard
+import 'package:devadarshan/services/mock_data_service.dart';
+import 'package:devadarshan/widgets/app_card.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -10,8 +13,15 @@ class AdminDashboard extends StatefulWidget {
   State<AdminDashboard> createState() => _AdminDashboardState();
 }
 
-class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStateMixin {
+class _AdminDashboardState extends State<AdminDashboard>
+    with TickerProviderStateMixin {
   late TabController _tabController;
+
+  // ## NEW: State variables for live data fetching ##
+  Timer? _timer;
+  int _liveVisitorCount = 0;
+
+  // Data that is not live can still come from the mock service
   final crowdData = MockDataService.getCrowdAnalytics();
   final temples = MockDataService.getTemples();
   final emergencyAlerts = MockDataService.getEmergencyAlerts();
@@ -20,12 +30,44 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+
+    // Start fetching the live count as soon as the screen loads
+    _fetchLiveCount();
+    // Set a timer to refetch the count every 5 seconds
+    _timer = Timer.periodic(
+        const Duration(seconds: 5), (timer) => _fetchLiveCount());
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _timer?.cancel(); // Important: Cancel the timer
     super.dispose();
+  }
+
+  // ## NEW: Function to fetch data from your Python API ##
+  Future<void> _fetchLiveCount() async {
+    try {
+      // ## IMPORTANT: Replace with your computer's IP address ##
+      const ipAddress = '127.0.0.1';
+      final url = Uri.parse('http://$ipAddress:5000/live_count');
+
+      final response = await http.get(url).timeout(const Duration(seconds: 1));
+
+      if (response.statusCode == 200 && mounted) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _liveVisitorCount = data['count'];
+        });
+      }
+    } catch (e) {
+      print("Error fetching live count: $e");
+      if (mounted) {
+        setState(() {
+          _liveVisitorCount = -1; // Use -1 to indicate an error
+        });
+      }
+    }
   }
 
   @override
@@ -35,7 +77,6 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
         title: const Text('Admin Dashboard'),
         bottom: TabBar(
           controller: _tabController,
-          unselectedLabelColor: Theme.of(context).colorScheme.onPrimary.withAlpha(179), // ~70% opacity
           tabs: const [
             Tab(text: 'Analytics', icon: Icon(Icons.analytics)),
             Tab(text: 'Heatmap', icon: Icon(Icons.map)),
@@ -79,14 +120,15 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
       physics: const NeverScrollableScrollPhysics(),
       mainAxisSpacing: 16,
       crossAxisSpacing: 16,
-      childAspectRatio: 1.2, // Adjusted for better fit
+      childAspectRatio: 1.2,
       children: [
         _buildStatCard(
-          'Today\'s Visitors',
-          '${crowdData['todayVisitors']}',
+          'Live Visitors',
+          // Display the live count from our state variable
+          _liveVisitorCount == -1 ? 'Error' : _liveVisitorCount.toString(),
           Icons.people,
           Theme.of(context).colorScheme.primary,
-          '+12% from yesterday',
+          _liveVisitorCount == -1 ? 'Connection Lost' : 'Updating in real-time',
         ),
         _buildStatCard(
           'Weekly Average',
@@ -97,7 +139,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
         ),
         _buildStatCard(
           'Peak Hours',
-          (crowdData['peakHours'] as List).join('\n'), // Use newline for long text
+          (crowdData['peakHours'] as List).join('\n'),
           Icons.schedule,
           Theme.of(context).colorScheme.tertiary,
           'Morning rush',
@@ -113,11 +155,12 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color, String subtitle) {
+  Widget _buildStatCard(
+      String title, String value, IconData icon, Color color, String subtitle) {
     return AppCard(
       margin: EdgeInsets.zero,
       child: Container(
-        padding: const EdgeInsets.all(12), // Reduced padding
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
@@ -128,7 +171,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceAround, // Better spacing
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,11 +189,11 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             ),
             Text(
               value,
-              // ## FIXED: Reduced font size to prevent overflow ##
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: color,
                   ),
+              textAlign: TextAlign.start,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +217,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
       ),
     );
   }
-  
+
   Widget _buildPredictionCard() {
     final prediction = crowdData['prediction'] as Map<String, dynamic>;
     return AppCard(
@@ -185,7 +228,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
           children: [
             Row(
               children: [
-                Icon(Icons.psychology, color: Theme.of(context).colorScheme.primary),
+                Icon(Icons.psychology,
+                    color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   'AI Crowd Prediction',
@@ -221,9 +265,9 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 4),
-                  ...(prediction['factors'] as List).map((factor) => 
-                    Text('• $factor', style: Theme.of(context).textTheme.bodyMedium)
-                  ),
+                  ...(prediction['factors'] as List).map((factor) => Text(
+                      '• $factor',
+                      style: Theme.of(context).textTheme.bodyMedium)),
                 ],
               ),
             ),
@@ -254,7 +298,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
               margin: const EdgeInsets.only(bottom: 8),
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: _getCrowdColor(temple.crowdPercentage).withAlpha(51),
+                  backgroundColor:
+                      _getCrowdColor(temple.crowdPercentage).withAlpha(51),
                   child: Text(
                     '${(temple.crowdPercentage * 100).round()}%',
                     style: TextStyle(
@@ -265,7 +310,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                   ),
                 ),
                 title: Text(temple.name),
-                subtitle: Text('${temple.currentCrowd}/${temple.maxCapacity} pilgrims'),
+                subtitle: Text(
+                    '${temple.currentCrowd}/${temple.maxCapacity} pilgrims'),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -306,7 +352,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
           children: [
             Row(
               children: [
-                Icon(Icons.lightbulb, color: Theme.of(context).colorScheme.secondary),
+                Icon(Icons.lightbulb,
+                    color: Theme.of(context).colorScheme.secondary),
                 const SizedBox(width: 8),
                 Text(
                   'AI Staff Deployment Suggestions',
@@ -318,20 +365,20 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             ),
             const SizedBox(height: 12),
             ...suggestions.map((suggestion) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.arrow_right,
-                    color: Theme.of(context).colorScheme.secondary,
-                    size: 20,
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.arrow_right,
+                        color: Theme.of(context).colorScheme.secondary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text(suggestion)),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(suggestion)),
-                ],
-              ),
-            )),
+                )),
           ],
         ),
       ),
@@ -340,7 +387,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
 
   Widget _buildHeatmapTab() {
     final heatMapData = crowdData['heatMapData'] as List;
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -373,7 +420,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                 const SizedBox(height: 16),
                 Expanded(
                   child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       mainAxisSpacing: 8,
                       crossAxisSpacing: 8,
@@ -527,7 +575,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             ),
           );
         }
-        
+
         final alert = emergencyAlerts[index - 1];
         return AppCard(
           margin: const EdgeInsets.only(bottom: 12),
@@ -599,9 +647,12 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
 
   Color _getAlertColor(EmergencyStatus status) {
     switch (status) {
-      case EmergencyStatus.active: return Colors.red;
-      case EmergencyStatus.responding: return Colors.orange;
-      case EmergencyStatus.resolved: return Colors.green;
+      case EmergencyStatus.active:
+        return Colors.red;
+      case EmergencyStatus.responding:
+        return Colors.orange;
+      case EmergencyStatus.resolved:
+        return Colors.green;
     }
   }
 
@@ -614,7 +665,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
   String _formatTime(DateTime time) {
     final now = DateTime.now();
     final difference = now.difference(time);
-    
+
     if (difference.inMinutes < 60) {
       return '${difference.inMinutes}m ago';
     } else if (difference.inHours < 24) {

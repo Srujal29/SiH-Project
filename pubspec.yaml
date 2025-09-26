@@ -13,6 +13,7 @@ dependencies:
   google_fonts: ^6.1.0
   audioplayers: ^6.5.1
   supabase_flutter: ^2.10.1
+  http: ^1.5.0
 
 dev_dependencies:
   flutter_test:
@@ -25,6 +26,7 @@ flutter:
 
   assets:
     - assets/audio/
+    - assets/images/
 
 flutter_launcher_icons:
   android: true

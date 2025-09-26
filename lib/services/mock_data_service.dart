@@ -3,7 +3,7 @@ import '../models/temple.dart';
 class MockDataService {
   static List<Temple> getTemples() {
     return [
-      Temple(
+       Temple(
         id: 'somnath',
         name: 'Somnath Temple',
         location: 'Somnath, Gujarat',
@@ -12,7 +12,8 @@ class MockDataService {
         maxCapacity: 2000,
         timings: ['5:00 AM - 9:30 PM'],
         isOpen: true,
-        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Somanath_Temple.jpg',
+        // ## CHANGED: Use local asset path ##
+        imageUrl: 'assets/images/Somanath_Temple.jpg',
       ),
       Temple(
         id: 'dwarka',
@@ -23,7 +24,8 @@ class MockDataService {
         maxCapacity: 1500,
         timings: ['6:00 AM - 12:30 PM', '5:00 PM - 9:30 PM'],
         isOpen: true,
-        imageUrl: 'https://www.shutterstock.com/image-photo/dwarka-believed-have-been-first-600nw-2446461461.jpg',
+        // ## CHANGED: Use local asset path ##
+        imageUrl: 'assets/images/dwarka.webp',
       ),
       Temple(
         id: 'ambaji',
@@ -34,7 +36,8 @@ class MockDataService {
         maxCapacity: 1200,
         timings: ['5:00 AM - 10:00 PM'],
         isOpen: true,
-        imageUrl: 'https://www.gujarattourism.com/content/dam/gujrattourism/images/religious-sites/ambaji-temple/Ambaji-Temple-Thumbnail.jpg',
+        // ## CHANGED: Use local asset path ##
+        imageUrl: 'assets/images/ambaji.jpg',
       ),
       Temple(
         id: 'pavagadh',
@@ -45,7 +48,8 @@ class MockDataService {
         maxCapacity: 800,
         timings: ['6:00 AM - 8:00 PM'],
         isOpen: true,
-        imageUrl: 'https://www.gujarattourism.com/content/dam/gujrattourism/images/pavagadh-kalika-mata-temple/pavagadhtempletopview.jpg',
+        // ## CHANGED: Use local asset path ##
+        imageUrl: 'assets/images/pavagadh.jpg',
       ),
     ];
   }

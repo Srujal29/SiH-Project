@@ -1,7 +1,7 @@
-// ## FIXED: Corrected the import to use a colon 'dart:async' ##
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// Removed google_fonts as the text is being removed
+// import 'package:google_fonts/google_fonts.dart'; 
 import 'package:devadarshan/screens/login_screen.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -22,10 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _startSplash() {
-    // Start playing the chant immediately, without waiting for it to load.
     _audioPlayer.play(AssetSource('audio/chant.mp3'));
 
-    // Start the navigation timer at the same time.
     Timer(const Duration(seconds: 6), () {
       if (mounted) {
         Navigator.pushReplacement(
@@ -38,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void dispose() {
-    // Stop the audio and release resources when the screen is gone.
     _audioPlayer.dispose();
     super.dispose();
   }
@@ -46,29 +43,32 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'ॐ नमः शिवाय',
-              style: GoogleFonts.laila(
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                shadows: [
-                  const Shadow(
-                    offset: Offset(1.0, 1.0),
-                    blurRadius: 3.0,
-                    color: Colors.black38,
-                  ),
-                ],
-              ),
+            // ## MODIFIED: Logo is bigger (height increased) ##
+            Image.asset(
+              'assets/images/logo.jpg', // Path to your .jpg logo
+              height: 250, // Increased height for a bigger logo
             ),
-            const SizedBox(height: 20),
+            // ## REMOVED: No more SizedBox below the logo for the text ##
+            // ## REMOVED: The 'ॐ नमः शिवाय' text is gone ##
+            // const SizedBox(height: 24), // This was for the text
+            // Text(
+            //   'ॐ नमः शिवाय',
+            //   style: GoogleFonts.laila(
+            //     fontSize: 40,
+            //     fontWeight: FontWeight.bold,
+            //     color: Theme.of(context).colorScheme.primary,
+            //   ),
+            // ),
+            const SizedBox(height: 40), // Added more space above the indicator
             CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withAlpha(204)),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).colorScheme.primary,
+              ),
             ),
           ],
         ),
